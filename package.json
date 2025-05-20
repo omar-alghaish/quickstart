@@ -1,0 +1,57 @@
+{
+    "name": "quickstart",
+    "version": "1.0.0",
+    "description": "CLI tool to initialize projects from templates",
+    "main": "dist/index.js",
+    "bin": {
+        "quickstart": "dist/index.js"
+    },
+    "scripts": {
+        "build": "npm run clean && tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts",
+        "clean": "rimraf dist",
+        "format": "prettier .",
+        "format:check": "prettier . --check",
+        "format:fix": "prettier . --write"
+    },
+    "keywords": [
+        "cli",
+        "project",
+        "template",
+        "initialization",
+        "quickstart",
+        "init",
+        "create",
+        "setup",
+        "starter",
+        "boilerplate",
+        "scaffold",
+        "starter-kit",
+        "starter-template",
+        "starter-project",
+        "starter-code"
+    ],
+    "author": "Omar Alghaish",
+    "license": "MIT",
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "commander": "^11.1.0",
+        "fs-extra": "^11.2.0",
+        "glob": "^10.3.10",
+        "inquirer": "^9.2.12",
+        "lru-cache": "^7.18.3"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "@types/inquirer": "^9.0.7",
+        "@types/node": "^20.10.5",
+        "prettier": "^3.5.3",
+        "prettier-plugin-organize-imports": "^4.1.0",
+        "prettier-plugin-packagejson": "^2.5.10",
+        "rimraf": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3"
+    },
+    "type": "module"
+}
