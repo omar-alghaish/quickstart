@@ -1,10 +1,13 @@
 {
-    "name": "quickstart",
+    "name": "@omar-alghaish/quickstart",
     "version": "1.0.0",
     "description": "CLI tool to initialize projects from templates",
     "main": "dist/index.js",
     "bin": {
         "quickstart": "dist/index.js"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "scripts": {
         "build": "npm run clean && tsc",
