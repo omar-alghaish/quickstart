@@ -17,10 +17,10 @@ A lightweight CLI tool that helps you initialize new projects from custom templa
 
 ```bash
 # Install globally using npm
-npm install -g quickstart
+npm i @omar-alghaish/quickstart
 
 # Or using yarn
-yarn global add quickstart
+yarn global add @omar-alghaish/quickstart
 ```
 
 ## Quick Start
