@@ -14,6 +14,7 @@ A lightweight CLI tool that helps you initialize new projects from custom templa
 * ✅ Dynamic placeholder replacements (replace `{{variableName}}` in files)
 * ✅ Custom post-creation scripts (run npm install, git init, etc.)
 * ✅ Non-interactive mode for CI/CD pipelines
+* 📦 Export/import templates for sharing between systems
 
 ## Installation
 
@@ -42,6 +43,16 @@ quickstart init --name my-template
 ```bash
 # Create a new project based on your template
 quickstart create my-template --directory new-project
+```
+
+### Share your template with others
+
+```bash
+# Export your template to a .qst file
+quickstart export my-template
+
+# Import a template from a .qst file
+quickstart import my-template.qst
 ```
 
 ## Command Reference
@@ -105,6 +116,50 @@ quickstart create [template] [options]
 
 ```bash
 quickstart create react-typescript --directory my-new-app
+```
+
+### `quickstart export`
+
+Export a template to a shareable .qst file.
+
+```bash
+quickstart export <template> [options]
+```
+
+**Arguments:**
+
+* `template` - Name of the template to export
+
+**Options:**
+
+* `-o, --output <path>` - Output file path (defaults to `<template>.qst` in current directory)
+
+**Example:**
+
+```bash
+quickstart export react-typescript --output ~/templates/react-typescript.qst
+```
+
+### `quickstart import`
+
+Import a template from a .qst file.
+
+```bash
+quickstart import <file> [options]
+```
+
+**Arguments:**
+
+* `file` - Path to the .qst file to import
+
+**Options:**
+
+* `-f, --force` - Overwrite existing template without prompting
+
+**Example:**
+
+```bash
+quickstart import ~/templates/react-typescript.qst
 ```
 
 ## Dynamic Placeholder Replacements
@@ -177,6 +232,35 @@ For each script, you can define:
 
 When creating a project from a template, you'll be prompted to select which scripts to run (unless using `--yes` flag, which will run all default scripts).
 
+## Template Sharing
+
+Templates can be shared between different systems or users using the export/import feature.
+
+### Exporting Templates
+
+When you export a template, all files and metadata are compressed into a single `.qst` file:
+
+```bash
+quickstart export my-template
+```
+
+This creates a `my-template.qst` file in the current directory that contains:
+
+* All template files (except ignored patterns)
+* Template metadata (name, description)
+* Variable definitions
+* Post-creation script definitions
+
+### Importing Templates
+
+To use a shared template, import it with:
+
+```bash
+quickstart import path/to/template.qst
+```
+
+This adds the template to your local templates directory, making it available for use with the `create` command.
+
 ## Non-Interactive Mode
 
 For CI/CD pipelines or scripted usage, you can use the `--yes` flag to run in non-interactive mode:
@@ -246,18 +330,42 @@ Then create new API projects:
 quickstart create express-api --directory user-service
 ```
 
+### Sharing Templates with Your Team
+
+Create a standardized template for your team:
+
+```bash
+# Create and configure your template
+quickstart init --name company-standard
+
+# Export the template for sharing
+quickstart export company-standard --output ~/company-standard.qst
+
+# Share the .qst file with your team
+```
+
+Team members can import and use the template:
+
+```bash
+# Import the shared template
+quickstart import ~/company-standard.qst
+
+# Create new projects using the team standard
+quickstart create company-standard --directory new-project
+```
+
 ## How It Works
 
 quickstart stores your templates in `~/.quickstart/templates/` and makes them available across your system. When you create a new project, quickstart copies the template files to your specified directory.
 
-## Template Storage
+### Template Storage
 
 Templates are stored locally in the following location:
 
 * ​**Linux/macOS**​: `~/.quickstart/templates/`
 * ​**Windows**​: `%USERPROFILE%\.quickstart\templates\`
 
-## Template Structure
+### Template Structure
 
 Templates are stored in `~/.quickstart/templates/{template-name}/`.
 
@@ -265,6 +373,15 @@ Each template includes:
 
 * All files and directories from the source project (except ignored patterns)
 * A `.template-meta.json` file with metadata, variables, and scripts
+
+### How .qst Files Work
+
+The `.qst` files created by the `export` command are compressed archives that contain:
+
+1. All template files (excluding any patterns specified during template creation)
+2. Template metadata including name, description, variables, and post-creation scripts
+
+These files use a specialized format optimized for template sharing, with ultra compression to minimize file size.
 
 ## Advanced Usage
 
@@ -281,6 +398,15 @@ cd ~/.quickstart/templates/my-template
 
 Each template includes a metadata file (`.template-meta.json`) that stores information about the template. You can view or edit this file to modify template behavior.
 
+### CI/CD Integration
+
+For automation pipelines, you can use the non-interactive mode to create projects:
+
+```bash
+# In your CI pipeline
+quickstart create my-template --yes --directory build --vars '{"apiKey":"$CI_API_KEY","version":"1.0.0"}'
+```
+
 ## Troubleshooting
 
 ### Command not found
@@ -290,6 +416,14 @@ If the `quickstart` command is not found after installation, make sure your npm 
 ### Permission errors
 
 If you encounter permission errors when creating templates or projects, check that you have appropriate file access permissions.
+
+### Import/Export issues
+
+If you have trouble importing a `.qst` file, ensure:
+
+* The file has a `.qst` extension
+* The file was created using the `export` command
+* You have read access to the file
 
 ## Contributing
 
