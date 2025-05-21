@@ -10,8 +10,10 @@
         "declaration": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "types": ["jest", "node"]
     },
     "include": ["src/**/*"],
-    "exclude": ["node_modules", "**/*.test.ts"]
+    "exclude": ["node_modules", "**/*.test.ts", "examples/**/*"]
 }
