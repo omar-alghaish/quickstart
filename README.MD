@@ -20,7 +20,7 @@ A lightweight CLI tool that helps you initialize new projects from custom templa
 
 ```bash
 # Install globally using npm
-npm i @omar-alghaish/quickstart
+npm i -g @omar-alghaish/quickstart
 
 # Or using yarn
 yarn global add @omar-alghaish/quickstart
@@ -362,8 +362,8 @@ quickstart stores your templates in `~/.quickstart/templates/` and makes them av
 
 Templates are stored locally in the following location:
 
-* ​**Linux/macOS**​: `~/.quickstart/templates/`
-* ​**Windows**​: `%USERPROFILE%\.quickstart\templates\`
+* **Linux/macOS**: `~/.quickstart/templates/`
+* **Windows**: `%USERPROFILE%\.quickstart\templates\`
 
 ### Template Structure
 
@@ -443,4 +443,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 * Inspired by the need for quick project setups
 * Built with TypeScript and Node.js
-
