@@ -1,6 +1,6 @@
 {
     "name": "@omar-alghaish/quickstart",
-    "version": "1.0.3",
+    "version": "1.0.6",
     "description": "CLI tool to initialize projects from templates",
     "main": "dist/index.js",
     "bin": {
@@ -9,6 +9,11 @@
     "publishConfig": {
         "access": "public"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/omar-alghaish/quickstart.git"
+    },
+    "homepage": "https://github.com/omar-alghaish/quickstart",
     "scripts": {
         "build": "npm run clean && tsc",
         "start": "node dist/index.js",

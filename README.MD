@@ -2,19 +2,22 @@
 
 [![npm version](https://img.shields.io/npm/v/quickstart.svg)](https://www.npmjs.com/package/quickstart)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight CLI tool that helps you initialize new projects from custom templates. Save time setting up boilerplate code and ensure consistency across projects.
+A powerful CLI tool that helps you initialize new projects from custom templates. Save time setting up boilerplate code, ensure consistency across projects, and streamline your development workflow with advanced template management features.
 
 ## Features
 
-* 📝 Create templates from existing projects
-* 🚀 Generate new projects with a single command
-* 🧩 Easily manage multiple project templates
-* 🔍 Selective file/directory copying
-* 💻 Interactive and user-friendly CLI
-* ✅ Dynamic placeholder replacements (replace `{{variableName}}` in files)
-* ✅ Custom post-creation scripts (run npm install, git init, etc.)
-* ✅ Non-interactive mode for CI/CD pipelines
-* 📦 Export/import templates for sharing between systems
+* 📝 **Template Creation**: Create templates from existing projects or GitHub repositories
+* 🚀 **Project Generation**: Generate new projects with a single command
+* 🧩 **Template Management**: List, update, remove, and get detailed info about templates
+* 🔍 **Selective Copying**: Smart file/directory filtering with ignore patterns
+* 💻 **Interactive CLI**: User-friendly prompts with non-interactive mode support
+* ✅ **Dynamic Replacements**: Replace `{{variableName}}` placeholders in files and directories
+* ✅ **Post-Creation Scripts**: Automated setup scripts (npm install, git init, etc.)
+* 📦 **Template Sharing**: Export/import templates as compressed .qst files
+* 🐙 **GitHub Integration**: Create templates directly from GitHub repositories
+* ⚙️ **Configuration Management**: Persistent settings for default values
+* 🔄 **Template Updates**: Modify template metadata and rename templates
+* 📊 **Detailed Information**: View comprehensive template statistics and content
 
 ## Installation
 
@@ -36,6 +39,16 @@ cd your-awesome-project
 
 # Save it as a template
 quickstart init --name my-template
+```
+
+### Create a template from GitHub
+
+```bash
+# Create template from a GitHub repository
+quickstart github facebook/react --name react-starter
+
+# Create from specific branch or subdirectory
+quickstart github vercel/next.js --branch canary --subdirectory examples/blog
 ```
 
 ### Create a new project from your template
@@ -69,8 +82,8 @@ quickstart init [options]
 
 * `-n, --name <name>` - Name of the template
 * `-d, --description <description>` - Description of the template
-* `--skip-variables` - Skip defining template variables
-* `--skip-scripts` - Skip defining post-creation scripts
+* `-s, --skip-variables` - Skip defining template variables
+* `-p, --skip-scripts` - Skip defining post-creation scripts
 
 **Interactive Prompts:**
 
@@ -83,7 +96,41 @@ quickstart init [options]
 **Example:**
 
 ```bash
-quickstart init --name react-typescript
+quickstart init --name react-typescript --description "React with TypeScript setup"
+```
+
+### `quickstart github`
+
+Create a template from a GitHub repository.
+
+```bash
+quickstart github <repo> [options]
+```
+
+**Arguments:**
+
+* `repo` - GitHub repository in format `owner/repo`
+
+**Options:**
+
+* `-n, --name <name>` - Name for the template (defaults to repo name)
+* `-d, --description <description>` - Description for the template
+* `-b, --branch <branch>` - Branch to clone (default: main/master)
+* `-s, --subdirectory <path>` - Use only a subdirectory of the repo
+* `--skip-variables` - Skip defining template variables
+* `--skip-scripts` - Skip defining post-creation scripts
+
+**Examples:**
+
+```bash
+# Create template from entire repository
+quickstart github facebook/create-react-app --name cra-template
+
+# Create from specific branch
+quickstart github vercel/next.js --branch canary --name nextjs-canary
+
+# Create from subdirectory
+quickstart github microsoft/vscode-extension-samples --subdirectory helloworld-sample --name vscode-hello
 ```
 
 ### `quickstart create`
@@ -112,10 +159,134 @@ quickstart create [template] [options]
 * Variable values (if template has variables)
 * Scripts to run (if template has scripts)
 
+**Examples:**
+
+```bash
+# Interactive mode
+quickstart create react-typescript --directory my-new-app
+
+# Non-interactive mode with variables
+quickstart create api-template --yes --vars '{"projectName":"user-api","port":"3000"}'
+```
+
+### `quickstart list`
+
+List all available templates.
+
+```bash
+quickstart list [options]
+```
+
+**Aliases:**`ls`
+
+**Options:**
+
+* `-d, --detailed` - Show detailed information for each template
+* `-j, --json` - Output as JSON format
+
+**Examples:**
+
+```bash
+# Simple list
+quickstart list
+
+# Detailed view
+quickstart list --detailed
+
+# JSON output for scripting
+quickstart list --json
+```
+
+### `quickstart info`
+
+Show detailed information about a specific template.
+
+```bash
+quickstart info <template> [options]
+```
+
+**Arguments:**
+
+* `template` - Name of the template
+
+**Options:**
+
+* `-j, --json` - Output as JSON format
+
 **Example:**
 
 ```bash
-quickstart create react-typescript --directory my-new-app
+quickstart info react-typescript
+```
+
+**Output includes:**
+
+* Template name and description
+* Creation date and file count
+* Defined variables with defaults and requirements
+* Post-creation scripts with commands
+* Template path
+
+### `quickstart update`
+
+Update template metadata.
+
+```bash
+quickstart update <template> [options]
+```
+
+**Arguments:**
+
+* `template` - Name of the template to update
+
+**Options:**
+
+* `-n, --name <name>` - Update template name
+* `-d, --description <description>` - Update template description
+
+**Interactive Prompts:**
+
+* New template name (if not provided via options)
+* New description (if not provided via options)
+
+**Examples:**
+
+```bash
+# Update with options
+quickstart update old-name --name new-name --description "Updated description"
+
+# Interactive update
+quickstart update my-template
+```
+
+**Note:** If you change the template name, the template directory will be renamed accordingly.
+
+### `quickstart remove`
+
+Remove a template.
+
+```bash
+quickstart remove <template> [options]
+```
+
+**Aliases:**`rm`
+
+**Arguments:**
+
+* `template` - Name of the template to remove
+
+**Options:**
+
+* `-f, --force` - Remove without confirmation
+
+**Examples:**
+
+```bash
+# With confirmation
+quickstart remove old-template
+
+# Force remove without confirmation
+quickstart rm old-template --force
 ```
 
 ### `quickstart export`
@@ -159,287 +330,477 @@ quickstart import <file> [options]
 **Example:**
 
 ```bash
-quickstart import ~/templates/react-typescript.qst
+quickstart import ~/templates/react-typescript.qst --force
 ```
 
-## Dynamic Placeholder Replacements
+### `quickstart config`
 
-When initializing a template, you can define variables that will be used for placeholder replacements in your template files.
+Manage configuration settings for default values and preferences.
 
-For example, if you define a variable `projectName`, any occurrence of `{{projectName}}` in your template files will be replaced with the value provided when creating a new project.
+```bash
+quickstart config [options]
+```
 
-### Built-in Variables
+**Options:**
+
+* `-g, --get <key>` - Get a configuration value
+* `-s, --set <key=value>` - Set a configuration value
+* `-r, --reset` - Reset configuration to defaults
+* `-l, --list` - List all configuration values
+
+**Configuration Keys:**
+
+* `defaultAuthor` - Default author name for templates
+* `defaultLicense` - Default license type (e.g., MIT, Apache-2.0)
+* `templatesDir` - Custom templates directory path
+* `githubToken` - GitHub personal access token for private repos
+
+**Examples:**
+
+```bash
+# Interactive configuration
+quickstart config
+
+# Set specific values
+quickstart config --set defaultAuthor="John Doe"
+quickstart config --set defaultLicense="MIT"
+
+# Get a value
+quickstart config --get defaultAuthor
+
+# List all settings
+quickstart config --list
+
+# Reset to defaults
+quickstart config --reset
+```
+
+## Advanced Features
+
+### Dynamic Placeholder Replacements
+
+When initializing a template, you can define variables that will be used for placeholder replacements in your template files and directory names.
+
+#### Variable Definition
+
+During template creation, you can define:
+
+* **Variable name** - Used in placeholders as `{{variableName}}`
+* **Description** - Help text for users
+* **Default value** - Optional default
+* **Required flag** - Whether the variable must be provided
+
+#### Built-in Variables
 
 Some variables are automatically available:
 
 * `{{projectName}}` - The name of the target directory
 * `{{currentYear}}` - The current year (useful for licenses, etc.)
 
-### Example
+#### File Content Replacement
 
-A file in your template:
+Any occurrence of `{{variableName}}` in your template files will be replaced:
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{{projectName}} - {{description}}</title>
-</head>
-<body>
-  <h1>Welcome to {{projectName}}!</h1>
-  <p>Created in {{currentYear}}.</p>
-</body>
-</html>
+```javascript
+// package.json template
+{
+  "name": "{{projectName}}",
+  "version": "1.0.0",
+  "description": "{{description}}",
+  "author": "{{authorName}}",
+  "license": "{{license}}"
+}
 ```
 
-When creating a new project and providing values:
+#### Directory Name Replacement
 
-* `projectName` = "awesome-app"
-* `description` = "My cool project"
+Directory names can also contain placeholders:
 
-Will become:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>awesome-app - My cool project</title>
-</head>
-<body>
-  <h1>Welcome to awesome-app!</h1>
-  <p>Created in 2025.</p>
-</body>
-</html>
+```
+src/
+  {{projectName}}-core/
+    index.js
+  {{projectName}}-utils/
+    helpers.js
 ```
 
-## Post-Creation Scripts
+### Post-Creation Scripts
 
-Post-creation scripts run after a project is created from a template. These can automate tasks like:
+Automate common setup tasks after project creation:
 
-* Installing dependencies (`npm install`)
-* Initializing git (`git init`)
-* Setting up git hooks (`npx husky install`)
-* Creating environment files (`cp .env.example .env`)
+#### Script Definition
 
-When initializing a template, you can define scripts that will be offered to run after project creation.
+When creating a template, define scripts with:
 
-For each script, you can define:
+* **Name** - Identifier for the script
+* **Command** - Shell command to execute
+* **Description** - What the script does
+* **Run by default** - Whether to run automatically in `--yes` mode
 
-* A name
-* The command to run
-* A description
-* Whether it should run by default
-
-When creating a project from a template, you'll be prompted to select which scripts to run (unless using `--yes` flag, which will run all default scripts).
-
-## Template Sharing
-
-Templates can be shared between different systems or users using the export/import feature.
-
-### Exporting Templates
-
-When you export a template, all files and metadata are compressed into a single `.qst` file:
+#### Common Script Examples
 
 ```bash
-quickstart export my-template
+# Install dependencies
+npm install
+
+# Initialize git repository
+git init && git add . && git commit -m "Initial commit"
+
+# Set up git hooks
+npx husky install
+
+# Copy environment file
+cp .env.example .env
+
+# Build the project
+npm run build
+
+# Run initial tests
+npm test
 ```
 
-This creates a `my-template.qst` file in the current directory that contains:
+#### Script Execution
 
-* All template files (except ignored patterns)
-* Template metadata (name, description)
-* Variable definitions
-* Post-creation script definitions
+Scripts run in the newly created project directory and can:
 
-### Importing Templates
+* Access all template variables as environment variables
+* Chain multiple commands with `&&` or `;`
+* Use conditional logic with shell operators
 
-To use a shared template, import it with:
+### GitHub Integration
+
+Create templates directly from any public GitHub repository:
+
+#### Repository Cloning
+
+* Automatically clones the specified repository
+* Supports branch selection for different versions
+* Can extract subdirectories for monorepo templates
+* Removes `.git` directory automatically
+
+#### Branch and Tag Support
 
 ```bash
-quickstart import path/to/template.qst
+# Use specific branch
+quickstart github facebook/react --branch main
+
+# Use specific tag
+quickstart github facebook/react --branch v18.2.0
 ```
 
-This adds the template to your local templates directory, making it available for use with the `create` command.
+#### Subdirectory Extraction
 
-## Non-Interactive Mode
-
-For CI/CD pipelines or scripted usage, you can use the `--yes` flag to run in non-interactive mode:
+Perfect for monorepos or repositories with multiple examples:
 
 ```bash
-quickstart create my-template --yes --directory my-new-project --vars '{"projectName":"awesome","description":"Automated project"}'
+# Extract specific example
+quickstart github vercel/next.js --subdirectory examples/with-typescript
+
+# Create from nested directory
+quickstart github microsoft/TypeScript --subdirectory samples/basic
 ```
 
-This will:
+### Template Sharing and Distribution
 
-1. Create a new project from "my-template"
-2. Use default values for all prompts
-3. Place the project in "my-new-project" directory
-4. Use the provided variable values
-5. Run only scripts marked as "runByDefault"
+#### .qst File Format
 
-## Use Cases
+The `.qst` format is a compressed archive containing:
 
-### React Project Template
+* All template files (excluding ignored patterns)
+* Template metadata (variables, scripts, etc.)
+* Compression for minimal file size
+* Integrity verification
 
-Save your preferred React project setup:
+#### Team Distribution
 
 ```bash
-# Create a React project with your preferred setup
+# Create and share team standard
+quickstart init --name company-standard
+quickstart export company-standard --output company-standard.qst
+
+# Distribute via shared drive, email, or repository
+# Team members import with:
+quickstart import company-standard.qst
+```
+
+#### Version Control Integration
+
+Store .qst files in repositories for team access:
+
+```bash
+# In your team's shared repository
+mkdir templates/
+quickstart export react-setup --output templates/react-setup.qst
+git add templates/
+git commit -m "Add React template"
+```
+
+### Configuration Management
+
+#### Persistent Settings
+
+Configuration is stored in `~/.quickstart/config.json` and persists across sessions:
+
+```json
+{
+  "defaultAuthor": "John Doe",
+  "defaultLicense": "MIT",
+  "templatesDir": "~/custom-templates",
+  "githubToken": "ghp_xxxxxxxxxxxxx"
+}
+```
+
+#### Template Variables Integration
+
+Configuration values can be used as default variable values during template creation, reducing repetitive input.
+
+## Use Cases and Examples
+
+### React Project Template with Full Setup
+
+```bash
+# Create a comprehensive React setup
 npx create-react-app my-react-setup --template typescript
 cd my-react-setup
 
-# Add ESLint, Prettier, etc.
-npm install eslint prettier eslint-config-prettier --save-dev
+# Add development tools
+npm install -D eslint prettier husky lint-staged @testing-library/react
 
-# Create custom folder structure
-mkdir -p src/{components,hooks,utils,pages,styles}
-
-# Save as template
-quickstart init --name react-ts-custom
-```
-
-Now you can create new React projects with your preferred setup:
-
-```bash
-quickstart create react-ts-custom --directory client-project
-```
-
-### Backend API Template
-
-Create an Express API template:
-
-```bash
-# Set up Express project
-mkdir express-api-template && cd express-api-template
-npm init -y
-npm install express mongoose dotenv cors helmet
+# Add UI libraries
+npm install @mui/material @emotion/react @emotion/styled
 
 # Create folder structure
-mkdir -p src/{controllers,models,routes,middleware,config}
+mkdir -p src/{components,hooks,utils,pages,styles,types}
 
-# Add your standard configuration files
-touch .env.example .gitignore
+# Add configuration files
+echo '{"semi": true, "singleQuote": true}' > .prettierrc
+echo 'module.exports = { extends: ["react-app"] }' > .eslintrc.js
+
+# Save as template with variables and scripts
+quickstart init --name react-pro-setup
+```
+
+Variables defined:
+
+* `projectName` - For package.json name
+* `description` - For package.json description
+* `authorName` - For package.json author
+* `gitRepo` - For package.json repository
+
+Scripts defined:
+
+* Install dependencies: `npm install`
+* Git initialization: `git init && git add . && git commit -m "Initial commit"`
+* Husky setup: `npx husky install`
+
+### Backend API Template with Database
+
+```bash
+# Set up comprehensive API template
+mkdir express-api-pro && cd express-api-pro
+
+# Initialize package.json
+npm init -y
+
+# Install dependencies
+npm install express mongoose dotenv cors helmet bcryptjs jsonwebtoken
+npm install -D nodemon jest supertest
+
+# Create structure
+mkdir -p src/{controllers,models,routes,middleware,config,utils,tests}
+mkdir -p docs/{api,deployment}
+
+# Add configuration
+echo "NODE_ENV=development\nPORT=3000\nDB_URI=mongodb://localhost:27017/{{projectName}}" > .env.example
 
 # Save as template
-quickstart init --name express-api
+quickstart init --name express-api-pro
 ```
 
-Then create new API projects:
+### Microservice Template from GitHub
 
 ```bash
-quickstart create express-api --directory user-service
+# Create microservice template from existing repository
+quickstart github nestjs/nest-microservices-example --name microservice-starter
+
+# Or create from a specific microservice example
+quickstart github microsoft/nodejs-microservices --subdirectory services/user-service --name user-microservice
 ```
 
-### Sharing Templates with Your Team
-
-Create a standardized template for your team:
+### Documentation Site Template
 
 ```bash
-# Create and configure your template
-quickstart init --name company-standard
+# Create from Docusaurus
+quickstart github facebook/docusaurus --subdirectory packages/create-docusaurus/templates/classic --name docs-site
 
-# Export the template for sharing
-quickstart export company-standard --output ~/company-standard.qst
-
-# Share the .qst file with your team
+# Create from VuePress
+quickstart github vuejs/vuepress --subdirectory docs --name vue-docs
 ```
 
-Team members can import and use the template:
+### Multi-Language Project Template
 
 ```bash
-# Import the shared template
-quickstart import ~/company-standard.qst
+# Create polyglot template
+mkdir fullstack-template && cd fullstack-template
 
-# Create new projects using the team standard
-quickstart create company-standard --directory new-project
+# Frontend structure
+mkdir -p frontend/{src,public,tests}
+echo '{"name": "{{projectName}}-frontend"}' > frontend/package.json
+
+# Backend structure  
+mkdir -p backend/{src,tests,config}
+echo '{"name": "{{projectName}}-backend"}' > backend/package.json
+
+# Infrastructure
+mkdir -p infra/{docker,k8s,terraform}
+echo 'version: "3.8"' > docker-compose.yml
+
+# Documentation
+mkdir -p docs/{api,frontend,backend,deployment}
+
+# Save as template
+quickstart init --name fullstack-template
 ```
 
-## How It Works
+## Template Management Best Practices
 
-quickstart stores your templates in `~/.quickstart/templates/` and makes them available across your system. When you create a new project, quickstart copies the template files to your specified directory.
+### Naming Conventions
 
-### Template Storage
+* Use descriptive, lowercase names with hyphens: `react-typescript-mui`
+* Include technology stack: `node-express-mongo`
+* Version templates: `api-template-v2`
 
-Templates are stored locally in the following location:
+### Variable Strategy
 
-* **Linux/macOS**: `~/.quickstart/templates/`
-* **Windows**: `%USERPROFILE%\.quickstart\templates\`
+* Use consistent variable names across templates
+* Provide sensible defaults
+* Mark essential variables as required
+* Use descriptive variable descriptions
 
-### Template Structure
+### Script Organization
 
-Templates are stored in `~/.quickstart/templates/{template-name}/`.
+* Order scripts logically (dependencies → setup → build → test)
+* Use descriptive script names
+* Set appropriate defaults for `runByDefault`
+* Test scripts before saving template
 
-Each template includes:
+### File Organization
 
-* All files and directories from the source project (except ignored patterns)
-* A `.template-meta.json` file with metadata, variables, and scripts
-
-### How .qst Files Work
-
-The `.qst` files created by the `export` command are compressed archives that contain:
-
-1. All template files (excluding any patterns specified during template creation)
-2. Template metadata including name, description, variables, and post-creation scripts
-
-These files use a specialized format optimized for template sharing, with ultra compression to minimize file size.
-
-## Advanced Usage
-
-### Manually Editing Templates
-
-You can manually edit templates by navigating to the templates directory and making changes:
-
-```bash
-cd ~/.quickstart/templates/my-template
-# Make your changes
-```
-
-### Template Metadata
-
-Each template includes a metadata file (`.template-meta.json`) that stores information about the template. You can view or edit this file to modify template behavior.
-
-### CI/CD Integration
-
-For automation pipelines, you can use the non-interactive mode to create projects:
-
-```bash
-# In your CI pipeline
-quickstart create my-template --yes --directory build --vars '{"apiKey":"$CI_API_KEY","version":"1.0.0"}'
-```
+* Use meaningful ignore patterns
+* Exclude environment-specific files
+* Include example/template configuration files
+* Document any manual setup steps
 
 ## Troubleshooting
 
-### Command not found
+### Common Installation Issues
 
-If the `quickstart` command is not found after installation, make sure your npm global binaries directory is in your PATH.
+**Command not found after installation:**
 
-### Permission errors
+```bash
+# Check npm global bin directory
+npm config get prefix
 
-If you encounter permission errors when creating templates or projects, check that you have appropriate file access permissions.
+# Add to PATH if needed (add to ~/.bashrc or ~/.zshrc)
+export PATH="$(npm config get prefix)/bin:$PATH"
+```
 
-### Import/Export issues
+**Permission errors on macOS/Linux:**
 
-If you have trouble importing a `.qst` file, ensure:
+```bash
+# Use npm's built-in fix
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+```
 
-* The file has a `.qst` extension
-* The file was created using the `export` command
-* You have read access to the file
+### Template Creation Issues
+
+**GitHub clone failures:**
+
+* Ensure repository exists and is public
+* Check internet connection
+* Verify repository name format (owner/repo)
+
+**Variable replacement not working:**
+
+* Check placeholder syntax: `{{variableName}}` (double braces)
+* Ensure variable names match exactly
+* Verify no extra spaces in placeholders
+
+**Script execution failures:**
+
+* Test commands manually in terminal
+* Check file permissions for scripts
+* Verify all dependencies are available
+
+### Import/Export Issues
+
+**Import failures:**
+
+* Ensure file has `.qst` extension
+* Verify file wasn't corrupted during transfer
+* Check file permissions
+
+**Export size concerns:**
+
+* Review ignore patterns to exclude large files
+* Consider excluding `node_modules`, `dist`, `.git`
+* Use compression-friendly file formats
+
+## Performance and Limits
+
+### Template Size Recommendations
+
+* **Small templates** (< 100 files): Ideal for quick setup
+* **Medium templates** (100-1000 files): Good for full applications
+* **Large templates** (> 1000 files): Consider using subdirectories or multiple templates
+
+### Memory Usage
+
+The tool loads templates into memory during processing:
+
+* Small templates: < 10MB RAM
+* Large templates: May use 100+ MB RAM temporarily
+* .qst files are compressed to minimize disk usage
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/omar-alghaish/quickstart.git
+cd quickstart
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Link for local testing
+npm link
+```
+
+### Contribution Guidelines
+
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Add tests for new functionality
+4. Ensure all tests pass (`npm test`)
+5. Update documentation if needed
+6. Commit your changes (`git commit -m 'Add some amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
-## License
+### Feature Requests
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Have an idea for a new feature? Please:
 
-## Acknowledgments
+1. Check existing issues first
+2. Create a detailed feature request
+3. Explain the use case and benefits
+4. Consider backwards compatibility
 
-* Inspired by the need for quick project setups
-* Built with TypeScript and Node.js
