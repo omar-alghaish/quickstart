@@ -1,6 +1,6 @@
 {
     "name": "@omar-alghaish/quickstart",
-    "version": "1.0.6",
+    "version": "1.0.9",
     "description": "CLI tool to initialize projects from templates",
     "main": "dist/index.js",
     "bin": {
@@ -22,7 +22,8 @@
         "format": "prettier .",
         "format:check": "prettier . --check",
         "format:fix": "prettier . --write",
-        "test": "jest"
+        "test": "jest",
+        "npm-publish": "npm run build && npm publish --access public"
     },
     "jest": {
         "preset": "ts-jest",
